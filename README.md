@@ -20,9 +20,13 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
-<!-- Short intro here -->
+***WISP*** provides a printable solution based on Laser-Induced Graphene (LIG) technology for **mm-scale micro-gesture recognition**, enabling discrete and unobtrusive interaction with smart devices. It translates tiny wrist deformations into piezoresistive changes, which are then digitized and streamed. In this repository, we open-source the sensing stack of WISP, including the sensor design, hardware, and firmware, featuring a **multi-channel** (2x2, extendable), **real-world-robust**, **high-sensitivity**, **low-noise** (100 uVpp), **low-power** (10 mW), and **compact** (4x4 cm) design. We hope this repository encourages further community involvement to improve and expand this area.
 
-<!-- ## Why WISP? -->
+## Why WISP?
+- Captures SOTA-level micro-gestures from extremely small force-based displacements, as demonstrated in multi-user, real-world studies and benchmarks.
+- Provides a printable alternative to current gesture-recognition methods (e.g. EMG and accelerometers).
+- Pushes LIG toward thinner substrates and helps bring it from the lab to the field.
+- Offers an open-source multi-channel, low-noise, and low-power solution that can be extended to diverse piezoresistive sensors in a smartwatch-sized form factor.
 
 ## Get Started
 ### How It Works
@@ -31,25 +35,12 @@
   <img src="README_assets/Function.png" alt="Function" style="width:70%;">
 </p>
 
-- [`Sensor/`](./Sensor/) includes our sensor array design pattern for the laser cutter on 25-um Polyimide (PI).
-- Sensor post-processing provides extra robustness, signal decoupling, and connectivity (more details in the paper).
-- [`Ver061/Hardware/`](./Ver061/Hardware/) includes the design files and documentation for PCB. It executes analog signal conditioning, multiplexing, A/D conversion, and sends the data to host wirelessly. Version 0.60 ([`Ver060/Hardware/`](./Ver060/Hardware/)) is also provided in the same format as a reference, featuring a larger form factor, hand-solderability, and better noise performance. A comparison between Version 0.60 and 0.61 will be provided below. You need to generate your own Gerber/NC drill files for fabrication. 
-- [`Ver061/Firmware/`](./Ver061/Firmware/) includes the firmware for nRF52840 modules (Seeed Xiao nRF52840). Both peripheral (Tx) and central (Rx) nodes are provided. Tx controls the timing and config of ADC/MUX/BLE, and reads the measurements via high-speed SPI, which are then packed and sent to Rx via BLE. A PC host can read the measurement in real time from the USB port. These firmwares are designed compatible with Arduino. Similar to the hardware, the firmware of Ver 0.60 ([`Ver060/Firmware/`](./Ver060/Firmware/)) is also provided in the same format.
+- [`Sensor/`](./Sensor/) includes our sensor-array design pattern for laser cutting on 25-um Polyimide (PI).
+- Sensor post-processing improves robustness, signal decoupling, and connectivity (see the paper for details).
+- [`Ver061/Hardware/`](./Ver061/Hardware/) includes the PCB design files and documentation. It performs analog signal conditioning, multiplexing, A/D conversion, and wireless data transmission to the host. Version 0.60 ([`Ver060/Hardware/`](./Ver060/Hardware/)) is also provided in the same format as a reference, featuring iron-solderability and better noise performance yet a double larger form factor. A comparison between Version 0.60 and 0.61 is provided below. You need to generate your own Gerber/NC drill files for fabrication.
+- [`Ver061/Firmware/`](./Ver061/Firmware/) includes the firmware for nRF52840 modules (Seeed XIAO nRF52840). Both peripheral (Tx) and central (Rx) nodes are provided. Tx controls ADC/MUX/BLE timing and configuration, reads the measurements via high-speed SPI, and then packs and sends the data to Rx over BLE. A PC host can read the measurements in real time through USB. The firmware is designed to be compatible with Arduino. As with the hardware, the firmware for Ver 0.60 ([`Ver060/Firmware/`](./Ver060/Firmware/)) is also provided in the same format.
 
-We worked hard to clean/refactor our design and code base, trying to make everything as simple as possible to follow. All the implementations have been verified and tested by human experts on the real devices. Hope you enjoy it!
-
-### Setup
-- MacOS 15.6 at Macbook M1 Pro 14-inch
-- Arduino Version 2.3
-- Seeed nRF52 Boards library Version 1.1.4 (BLE SoftDevice S140 7.3.0)
-- Altium Designer 26
-- Python >=3.10
-
-
-<details>
-<summary><strong>Version Comparison</strong></summary>
-To appear.
-
+We worked hard to clean up and refactor the design and codebase, trying to make everything as simple as possible to follow. All implementations have been verified and tested by human experts on real devices. We hope this repository is useful to the community.
 
 </details>
 
@@ -58,8 +49,9 @@ To appear.
 
 ```
 .
-├── .gitignore                                   
-├── License_Driver
+├── .gitignore            
+├── LICENSE                                     # MIT license                          
+├── License_Driver                              # License files of the external libraries used in this repo
 │   ├── LICENSE_ADAFRUIT_MIT.txt
 │   └── LICENSE_ADI_BSD.txt
 ├── README_assets
@@ -132,12 +124,82 @@ To appear.
 ```
 </details>
 
+### Setup
+- macOS 15.6 on a 14-inch MacBook Pro with M1 Pro
+- Arduino 2.3
+- Seeed nRF52 Boards library 1.1.4 (BLE SoftDevice S140 7.3.0)
+- Altium Designer 26
+- Python >= 3.10
+- 0.05% precision resistors for critical locations
+- The DVDD port of the MCU can be connected to either USB or battery power through a switch. During firmware upload or data logging via USB, connect DVDD to USB power. During normal data logging via BLE, connect DVDD to the battery. Connecting DVDD to the battery while USB is also connected can be dangerous or noisy without protection circuits.
+
+
+### Version Comparison
+<table border="1" width="75%">
+  <tr>
+    <td align="left" width="20%">
+    </td>
+    <td align="center" width="40%">
+        <img src="README_assets/Ver060.png" height="100"><br>
+        <strong>Ver0.60</strong><br>
+    </td>
+    <td align="center" width="40%">
+        <img src="README_assets/Ver061.png" height="100"><br>
+        <strong>Ver0.61</strong><br>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" width="20%">
+        <strong>Noise Range <sup>[1]</sup></strong><br>
+    </td>
+    <td align="center" width="40%">
+        50-200 uVpp
+    </td>
+    <td align="center" width="40%">
+        100-350 uVpp
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" width="20%">
+        <strong>Iron-Solderability</strong><br>
+    </td>
+    <td align="center" width="40%">
+        Yes
+    </td>
+    <td align="center" width="40%">
+        Possible but not easy (space is limited)
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" width="20%">
+        <strong>Dimension</strong><br>
+    </td>
+    <td align="center" width="40%">
+        5 cm x 7.5 cm (mostly 0603 components)
+    </td>
+    <td align="center" width="40%">
+        4 cm x 4 cm (mostly 0402 components)
+    </td>
+  </tr>
+</table>
+<sub>[1] The noise performance is measured end-to-end, which can be influenced by several elements: sensor fabrication, environment noise/interference (powerline, RFI, etc), human body posture/orientation, sensor attachment condition, length and material of wires, soldering quality, component quality/precision, and so on.</sub>
+
+
 ## Future Improvement
 ### Towards Version 0.62
-To appear.
+Ver 0.62 targets noise performance as good as Ver 0.60 (50 uVpp) with a form factor as small as Ver 0.61 (4 cm x 4 cm). The main improvements will be in PCB layout and firmware timing. This includes, but is not limited to:
+- More clearance between the board edge and the analog components.
+- Reshaping the copper pour and removing unnecessary regions.
+- Improving via usage for grounding, return paths, and fencing.
+- Stricter star-connected power routing.
+- Adding small resistors between the two X2Y capacitors to avoid anti-resonance.
+- Better power decoupling.
+- More precise MCU timing using timer-based interrupts (the timer currently somehow conflicts with the BLE, so it is disabled).
 
-### Roadmaps
-To appear.
+If you have any thoughts on how to improve performance, please do not hesitate to share them with us!
 
 ## Citation
 If you use this repository, we appreciate your starring this repo and citing the paper below
