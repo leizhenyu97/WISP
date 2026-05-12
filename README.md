@@ -1,4 +1,4 @@
-# WISP
+# WISP (Wearable Imperceptible Sensing Platform)
 <p align="center">
   <img src="README_assets/FabPipeline.png" alt="FabPipeline" style="width:85%;">
 </p>
