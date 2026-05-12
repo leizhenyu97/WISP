@@ -37,7 +37,7 @@
 
 - [`Sensor/`](./Sensor/) includes our sensor-array design pattern for laser cutting on 25-um Polyimide (PI).
 - Sensor post-processing improves robustness, signal decoupling, and connectivity (see the paper for details).
-- [`Ver061/Hardware/`](./Ver061/Hardware/) includes the PCB design files and documentation. It performs analog signal conditioning, multiplexing, A/D conversion, and wireless data transmission to the host. Version 0.60 ([`Ver060/Hardware/`](./Ver060/Hardware/)) is also provided in the same format as a reference, featuring iron-solderability and better noise performance yet a double larger form factor. A comparison between Version 0.60 and 0.61 is provided below. You need to generate your own Gerber/NC drill files for fabrication.
+- [`Ver061/Hardware/`](./Ver061/Hardware/) includes the PCB design files and documentation. It performs analog signal conditioning, multiplexing, A/D conversion, and wireless data transmission to the host. Version 0.60 ([`Ver060/Hardware/`](./Ver060/Hardware/)) is also provided in the same format as a reference, featuring iron-solderability and better noise performance yet a double larger form factor. A comparison between Version 0.60 and 0.61 is provided in the [Version Comparison](#version-comparison) section below. You need to generate your own Gerber/NC drill files for fabrication.
 - [`Ver061/Firmware/`](./Ver061/Firmware/) includes the firmware for nRF52840 modules (Seeed XIAO nRF52840). Both peripheral (Tx) and central (Rx) nodes are provided. Tx controls ADC/MUX/BLE timing and configuration, reads the measurements via high-speed SPI, and then packs and sends the data to Rx over BLE. A PC host can read the measurements in real time through USB. The firmware is designed to be compatible with Arduino. As with the hardware, the firmware for Ver 0.60 ([`Ver060/Firmware/`](./Ver060/Firmware/)) is also provided in the same format.
 
 We worked hard to clean up and refactor the design and codebase, trying to make everything as simple as possible to follow. All implementations have been verified and tested by human experts on real devices. We hope this repository is useful to the community.
@@ -195,7 +195,7 @@ Ver 0.62 targets noise performance as good as Ver 0.60 (50 uVpp) with a form fac
 - Reshaping the copper pour and removing unnecessary regions.
 - Improving via usage for grounding, return paths, and fencing.
 - Stricter star-connected power routing.
-- Adding small resistors between the two X2Y capacitors to avoid anti-resonance.
+- Adding small resistors between the two X2Y capacitors to dampen anti-resonance.
 - Better power decoupling.
 - More precise MCU timing using timer-based interrupts (the timer currently somehow conflicts with the BLE, so it is disabled).
 
