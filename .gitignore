@@ -1,0 +1,33 @@
+# Ignore Python/Jupyter cache files and cache directories (recursive)
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+
+__pycache__/
+**/__pycache__/
+**/__pycache__/**
+
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+**/.ipynb_checkpoints/**
+
+.pytest_cache/
+**/.pytest_cache/
+**/.pytest_cache/**
+
+.mypy_cache/
+**/.mypy_cache/
+**/.mypy_cache/**
+
+.ruff_cache/
+**/.ruff_cache/
+**/.ruff_cache/**
+
+**/.DS_Store
+**/.vscode
+
+# Ignore our instruction to AI agents for cleaning the repo.
+**/refactor_design_requirements.md
+**/refactor_plan.md
+**/refactor_test.md

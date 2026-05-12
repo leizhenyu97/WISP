@@ -1,2 +1,153 @@
 # WISP
-Repository for our paper “WISP: Printable Graphene-based Wearables for Force-based Micro-Gesture Recognition.”
+<p align="center">
+  <img src="README_assets/FabPipeline.png" alt="FabPipeline" style="width:85%;">
+</p>
+
+<p align="center">
+  <img src="README_assets/Gesture.png" alt="Gesture" style="width:40%;" />
+  <!-- <span style="display:inline-block; width:20px;"></span> -->
+  <img src="README_assets/Granularity.png" alt="Granularity" style="width:45%;" />
+</p>
+
+
+<h3 align="center">
+  <a href="https://dl.acm.org/doi/10.1145/3774906.3800486">
+    [ACM SenSys'26] WISP: Printable Graphene-Based Wearables for Force-Based Micro-Gesture Recognition
+  </a>
+</h3>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
+</p>
+
+<!-- Short intro here -->
+
+<!-- ## Why WISP? -->
+
+## Get Started
+### How It Works
+
+<p align="left">
+  <img src="README_assets/Function.png" alt="Function" style="width:70%;">
+</p>
+
+- [`Sensor/`](./Sensor/) includes our sensor array design pattern for the laser cutter on 25-um Polyimide (PI).
+- Sensor post-processing provides extra robustness, signal decoupling, and connectivity (more details in the paper).
+- [`Ver061/Hardware/`](./Ver061/Hardware/) includes the design files and documentation for PCB. It executes analog signal conditioning, multiplexing, A/D conversion, and sends the data to host wirelessly. Version 0.60 ([`Ver060/Hardware/`](./Ver060/Hardware/)) is also provided in the same format as a reference, featuring a larger form factor, hand-solderability, and better noise performance. A comparison between Version 0.60 and 0.61 will be provided below. You need to generate your own Gerber/NC drill files for fabrication. 
+- [`Ver061/Firmware/`](./Ver061/Firmware/) includes the firmware for nRF52840 modules (Seeed Xiao nRF52840). Both peripheral (Tx) and central (Rx) nodes are provided. Tx controls the timing and config of ADC/MUX/BLE, and reads the measurements via high-speed SPI, which are then packed and sent to Rx via BLE. A PC host can read the measurement in real time from the USB port. These firmwares are designed compatible with Arduino. Similar to the hardware, the firmware of Ver 0.60 ([`Ver060/Firmware/`](./Ver060/Firmware/)) is also provided in the same format.
+
+We worked hard to clean/refactor our design and code base, trying to make everything as simple as possible to follow. All the implementations have been verified and tested by human experts on the real devices. Hope you enjoy it!
+
+### Setup
+- MacOS 15.6 at Macbook M1 Pro 14-inch
+- Arduino Version 2.3
+- Seeed nRF52 Boards library Version 1.1.4 (BLE SoftDevice S140 7.3.0)
+- Altium Designer 26
+- Python >=3.10
+
+
+<details>
+<summary><strong>Version Comparison</strong></summary>
+To appear.
+
+
+</details>
+
+<details>
+<summary><strong>Directory Structure</strong></summary>
+
+```
+.
+├── .gitignore                                   
+├── License_Driver
+│   ├── LICENSE_ADAFRUIT_MIT.txt
+│   └── LICENSE_ADI_BSD.txt
+├── README_assets
+│   ├── FabPipeline.png
+│   ├── Function.png
+│   ├── Gesture.png
+│   └── Granularity.png
+├── README.md                                    
+├── Sensor
+│   └── 2x2-array.pdf                            # 2×2 sensor array design reference.
+├── Ver060
+│   ├── Firmware
+│   │   ├── ad7124_ble_rx
+│   │   │   └── ad7124_ble_rx.ino                # BLE receiver sketch that forwards incoming data to USB serial.
+│   │   └── ad7124_ble_tx_timer_LP
+│   │       ├── ad7124_ble_tx_timer_LP.ino       # Main BLE transmitter sketch for timed sensing and packet streaming.
+│   │       ├── ad7124_regs.c                    # AD7124 default register values used at startup.
+│   │       ├── ad7124_regs.h                    # AD7124 register table declaration.
+│   │       ├── AD7124.cpp                       # Low-level AD7124 SPI driver implementation.
+│   │       ├── AD7124.h                         # Low-level AD7124 driver declarations and macros.
+│   │       ├── adg726.cpp                       # External analog mux control for the Ver0.60 hardware path.
+│   │       ├── adg726.h                         # External analog mux control declarations for Ver0.60.
+│   │       ├── CN0391.cpp                       # Sensor readout helper implementation built on the AD7124 path.
+│   │       ├── CN0391.h                         # Sensor readout helper declarations.
+│   │       ├── Communication.cpp                # Minimal SPI transfer helpers shared by the firmware.
+│   │       ├── Communication.h                  # Shared SPI helper declarations and pin definitions.
+│   │       └── PROGMEM_readAnything.h           # Small utility templates for reading typed data from program memory.
+│   └── Hardware
+│       ├── ver060.Annotation                    # Hardware annotation metadata for Ver0.60.
+│       ├── ver060.PDF                           # Exported hardware reference document for Ver0.60.
+│       ├── ver060.PcbDoc                        # PCB layout source for Ver0.60.
+│       ├── ver060.stackup                       # PCB layer stack definition for Ver0.60.
+│       ├── ver060_ADC.SchDoc                    # ADC section schematic for Ver0.60.
+│       ├── ver060_LPF.SchDoc                    # Low-pass filter schematic for Ver0.60.
+│       ├── ver060_MCU.SchDoc                    # MCU section schematic for Ver0.60.
+│       ├── ver060_Overview.SchDoc               # Top-level schematic overview for Ver0.60.
+│       ├── ver060_Power.SchDoc                  # Power section schematic for Ver0.60.
+│       └── ver060_SignalAnalog.SchDoc           # Analog signal path schematic for Ver0.60.
+└── Ver061
+    ├── Firmware
+    │   ├── ad7124_ble_rx
+    │   │   └── ad7124_ble_rx.ino                # BLE receiver sketch that forwards incoming data to USB serial.
+    │   └── ad7124_ble_tx_timer_LP
+    │       ├── ad7124_ble_tx_timer_LP.ino       # Main BLE transmitter sketch for timed sensing and packet streaming.
+    │       ├── ad7124_regs.c                    # AD7124 default register values used at startup.
+    │       ├── ad7124_regs.h                    # AD7124 register table declaration.
+    │       ├── AD7124.cpp                       # Low-level AD7124 SPI driver implementation.
+    │       ├── AD7124.h                         # Low-level AD7124 driver declarations and macros.
+    │       ├── adg726.cpp                       # Alternative analog mux control implementation kept alongside Ver0.61.
+    │       ├── adg726.h                         # Alternative analog mux control declarations kept alongside Ver0.61.
+    │       ├── CN0391.cpp                       # Sensor readout helper implementation built on the AD7124 path.
+    │       ├── CN0391.h                         # Sensor readout helper declarations.
+    │       ├── Communication.cpp                # Minimal SPI transfer helpers shared by the firmware.
+    │       ├── Communication.h                  # Shared SPI helper declarations and pin definitions.
+    │       ├── max4734.cpp                      # Active analog switch control for the Ver0.61 hardware path.
+    │       ├── max4734.h                        # Active analog switch control declarations for Ver0.61.
+    │       └── PROGMEM_readAnything.h           # Small utility templates for reading typed data from program memory.
+    └── Hardware
+        ├── ver061.Annotation                    # Hardware annotation metadata for Ver0.61.
+        ├── ver061.PDF                           # Exported hardware reference document for Ver0.61.
+        ├── ver061.PcbDoc                        # PCB layout source for Ver0.61.
+        ├── ver061.stackup                       # PCB layer stack definition for Ver0.61.
+        ├── ver061_ADC.SchDoc                    # ADC section schematic for Ver0.61.
+        ├── ver061_LPF.SchDoc                    # Low-pass filter schematic for Ver0.61.
+        ├── ver061_MCU.SchDoc                    # MCU section schematic for Ver0.61.
+        ├── ver061_Overview.SchDoc               # Top-level schematic overview for Ver0.61.
+        ├── ver061_Power.SchDoc                  # Power section schematic for Ver0.61.
+        └── ver061_SignalAnalog.SchDoc           # Analog signal path schematic for Ver0.61.
+
+```
+</details>
+
+## Future Improvement
+### Towards Version 0.62
+To appear.
+
+### Roadmaps
+To appear.
+
+## Citation
+If you use this repository, we appreciate your starring this repo and citing the paper below
+
+```
+Zhenyu Lei, Xiaomeng Liu, Quan Zhang, VP Nguyen, Jun Yao, and Deepak Ganesan. 2026. WISP: Printable Graphene-Based Wearables for Force-Based Micro-Gesture Recognition. In Proceedings of the 2026 ACM/IEEE International Conference on Embedded Artificial Intelligence and Sensing Systems (SenSys '26). Association for Computing Machinery, New York, NY, USA, 531–544. https://doi.org/10.1145/3774906.3800486
+```
+
+## License
+MIT © Zhenyu Lei (zhenyulei@umass.edu)
+
+## Acknowledgements
+WISP is built on top of the open-source drivers from Analog Device Inc. and Adafruit Inc. The original licenses and copyright notices for these drivers are preserved in [`License_Driver/`](./License_Driver/).
